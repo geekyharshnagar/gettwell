@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Get‑Well Soon  🐾</title>
+  <meta name="description" content="A tiny, single-file cheering webpage you can share via WhatsApp. Works on Android & iPhone." />
+  <style>
+    :root{
+      --bg: #0f1226;
+      --card: #181c3a;
+      --accent: #7c5cff;
+      --accent-2: #00e6a7;
+      --text: #e8e9ff;
+      --muted: #a6abff;
+      --glow: 0 0 30px rgba(124,92,255,.4), 0 0 8px rgba(124,92,255,.6);
+    }
+    html,body{height:100%;}
+    body{
+      margin:0; background: radial-gradient(1200px 800px at 20% -10%, #1e2250 0%, #0f1226 60%) fixed; color:var(--text); font-family: system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, Noto Sans, 
+      'Helvetica Neue', Arial, 'Apple Color Emoji','Segoe UI Emoji';
+      display:flex; align-items:center; justify-content:center; padding:20px;
+    }
+    .card{
+      width:min(680px, 95vw); background:linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.02));
+      border:1px solid rgba(255,255,255,.08); border-radius:28px; padding:20px 20px 16px; box-shadow: 0 10px 35px rgba(0,0,0,.35);
+      backdrop-filter: blur(6px);
+    }
+    .top{
+      display:flex; gap:16px; align-items:center; justify-content:space-between; flex-wrap:wrap;
+    }
+    .title{
+      line-height:1.1; font-size:clamp(18px, 3.4vw, 26px); font-weight:700; letter-spacing:.2px;
+    }
+    .byline{font-size:14px; color:var(--muted)}
+
+    .pet-wrap{ display:flex; align-items:center; justify-content:center; margin:8px 0 6px;}
+    /* Cute blob pet (pure CSS + SVG-like shapes) */
+    .pet{ position:relative; width:180px; height:160px; background:linear-gradient(160deg,#ffd7f0,#ffe9a9 60%, #fff);
+      border-radius: 50% 50% 42% 42% / 55% 55% 45% 45%; box-shadow:0 8px 0 0 rgba(0,0,0,.08) inset, 0 0 0 4px rgba(255,255,255,.35) inset, 0 18px 30px rgba(0,0,0,.35);
+      animation: floaty 3.2s ease-in-out infinite; }
+    @keyframes floaty{ 0%,100%{ transform: translateY(0)} 50%{ transform: translateY(-10px)} }
+
+    .ear{ position:absolute; width:56px; height:56px; background:#ffe3f4; border-radius: 50% 50% 10% 10% / 70% 70% 20% 20%; top:-12px; box-shadow: 0 0 0 3px rgba(255,255,255,.4) inset}
+    .ear.left{ left:22px; transform: rotate(-18deg)}
+    .ear.right{ right:22px; transform: rotate(18deg)}
+
+    .eye{ position:absolute; width:18px; height:18px; background:#191919; border-radius:50%; top:62px; animation: blink 5s infinite; }
+    .eye.left{ left:58px } .eye.right{ right:58px }
+    @keyframes blink{ 0%, 48%, 52%, 100%{ transform: scaleY(1)} 50%{ transform: scaleY(.1)} }
+
+    .cheek{ position:absolute; width:22px; height:12px; background:rgba(255,100,150,.35); filter: blur(0.5px); border-radius:50%; top:86px }
+    .cheek.left{ left:38px } .cheek.right{ right:38px }
+
+    .mouth{ position:absolute; width:40px; height:24px; border-bottom:5px solid #191919; border-radius:0 0 40px 40px; bottom:50px; left:0; right:0; margin:auto; }
+
+    .paw{ position:absolute; width:44px; height:48px; background:#fff6d5; border-radius: 45% 45% 55% 55%; bottom:-4px; box-shadow: 0 2px 0 rgba(0,0,0,.08) inset }
+    .paw.left{ left:36px }
+    .paw.right{ right:36px }
+
+    .hand{ position:absolute; width:46px; height:46px; background:#fff6d5; border-radius:50%; left:-10px; top:-8px; box-shadow: 0 2px 0 rgba(0,0,0,.08) inset }
+    .wave{ position:absolute; width:52px; height:52px; background:#fff6d5; border-radius:50%; top:82px; right:-6px; transform-origin: top left; animation: wave 1.9s ease-in-out infinite }
+    @keyframes wave{ 0%, 100%{ transform: rotate(8deg)} 50%{ transform: rotate(-18deg)} }
+
+    .badge{ display:inline-flex; align-items:center; gap:8px; padding:8px 12px; border-radius:999px; background:rgba(124,92,255,.15); border:1px solid rgba(124,92,255,.35); box-shadow: var(--glow); font-size:14px; }
+    .badge .dot{ width:10px; height:10px; background:var(--accent-2); border-radius:50%; box-shadow:0 0 12px rgba(0,230,167,.8) }
+
+    .hello{ text-align:center; font-weight:700; font-size:20px; margin:6px 0 4px; }
+    .msg{ text-align:center; color:var(--muted); margin:0 8px 8px; }
+
+    .controls{ display:grid; grid-template-columns: repeat(2, 1fr); gap:10px; margin-top:12px }
+    .btn{ border:1px solid rgba(255,255,255,.13); background:linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.05)); color:var(--text);
+      border-radius:14px; padding:12px 14px; font-weight:600; font-size:15px; letter-spacing:.2px; text-align:center;
+      box-shadow: 0 6px 14px rgba(0,0,0,.25); user-select:none; -webkit-tap-highlight-color: transparent; touch-action: manipulation; }
+    .btn:active{ transform: translateY(1px) scale(.997) }
+
+    .footer{ margin-top:14px; text-align:center; font-size:13px; color:var(--muted) }
+    .love{ color:#ff9ecf; font-weight:700 }
+
+    /* Confetti canvas */
+    canvas#fx{ position:fixed; inset:0; pointer-events:none; }
+
+    /* Breathing overlay */
+    .overlay{ position:fixed; inset:0; background:rgba(15,18,38,.85); display:none; place-items:center; z-index:50 }
+    .bubble{ width:160px; height:160px; border-radius:50%; border:3px solid rgba(255,255,255,.6); display:grid; place-items:center; font-weight:700; color:var(--text); animation: breathe 4s ease-in-out infinite }
+    @keyframes breathe{ 0%,100%{ transform: scale(.8)} 50%{ transform: scale(1.15)} }
+
+    .tosmall{ font-size:12px; opacity:.85; margin-top:6px }
+  </style>
+</head>
+<body>
+  <canvas id="fx"></canvas>
+  <div class="card" role="main" aria-live="polite">
+    <div class="top">
+      <div>
+        <div class="title">Get‑Well Soon  <span aria-hidden>🐾</span></div>
+        <div class="byline" id="byline">From <strong id="owner"></strong> • <span id="date"></span></div>
+      </div>
+      <div class="badge" id="status"><span class="dot"></span> Super safe, works offline</div>
+    </div>
+
+    <div class="pet-wrap" aria-hidden>
+      <div class="pet" id="pet">
+        <div class="ear left"></div>
+        <div class="ear right"></div>
+        <div class="eye left"></div>
+        <div class="eye right"></div>
+        <div class="cheek left"></div>
+        <div class="cheek right"></div>
+        <div class="mouth"></div>
+        <div class="paw left"><div class="hand"></div></div>
+        <div class="paw right"></div>
+        <div class="wave"></div>
+      </div>
+    </div>
+
+    <div class="hello" id="hello">Hi there! I’m Puff, your healing buddy ✨</div>
+    <p class="msg" id="message">Tap a button below. I know your name, and I’ve got giggles, hugs, and calm breaths ready.</p>
+
+    <div class="controls">
+      <button class="btn" id="btnGreet">👋 Personal Greet</button>
+      <button class="btn" id="btnJoke">😂 Tell me a Joke</button>
+      <button class="btn" id="btnQuote">💪 Boost Me</button>
+      <button class="btn" id="btnBreathe">🫁 Breathe 4‑7‑8</button>
+      <button class="btn" id="btnHug">🤗 Big Hug</button>
+      <button class="btn" id="btnConfetti">🎉 Confetti</button>
+      <button class="btn" id="btnWater">💧 Water Nudge</button>
+      <button class="btn" id="btnRename">✏️ Change Name</button>
+    </div>
+
+    <div class="footer" id="footer">
+      <div>Made with <span class="love">❤</span> just for <span id="friendTag">you</span>. Rest up—better days are already on their way.</div>
+      <div class="tosmall">Tip: Add this page to Home Screen for quick smiles.</div>
+    </div>
+  </div>
+
+  <div class="overlay" id="breathCoach" aria-hidden="true">
+    <div>
+      <div class="bubble" id="bubble">Inhale</div>
+      <div class="tosmall" style="text-align:center">4 sec inhale • 7 hold • 8 exhale (x3)</div>
+    </div>
+  </div>
+
+<script>
+(function(){
+  const qs = (s)=>document.querySelector(s);
+  const friendKey = 'gw_friend_name';
+  const ownerKey = 'gw_owner_name';
+  const petEl = qs('#pet');
+  const hello = qs('#hello');
+  const msg = qs('#message');
+  const friendTag = qs('#friendTag');
+  const ownerEl = qs('#owner');
+  const dateEl = qs('#date');
+
+  dateEl.textContent = new Date().toLocaleDateString(undefined,{ year:'numeric', month:'short', day:'numeric'});
+
+  // 1) Setup names (from URL ?name=&from= or prompt, persisted locally)
+  const url = new URL(location.href);
+  let friendName = url.searchParams.get('name') || localStorage.getItem(friendKey);
+  let ownerName = url.searchParams.get('from') || localStorage.getItem(ownerKey) || 'Your Friend';
+
+  function askNames(){
+    friendName = prompt("What's your name? (I'll remember it)", friendName || '') || 'Buddy';
+    ownerName = prompt("Who sent this to you? (e.g., Harsh)", ownerName || '') || 'Your Friend';
+    localStorage.setItem(friendKey, friendName);
+    localStorage.setItem(ownerKey, ownerName);
+    renderNames();
+  }
+
+  function renderNames(){
+    ownerEl.textContent = ownerName;
+    friendTag.textContent = friendName;
+    hello.textContent = `Hi ${friendName}! I’m Puff 🐾`; 
+    msg.textContent = `I’m here with ${ownerName}’s biggest hugs and smiles. Tap a button below!`;
+  }
+
+  if(!friendName){ askNames(); } else { renderNames(); }
+
+  // 2) Buttons
+  const jokes = [
+    "Why did the computer catch a cold? Too many windows open!",
+    "I tried to catch fog yesterday. I mist.",
+    "What do you call cheese that isn't yours? Nacho cheese!",
+    "Parallel lines have so much in common. It’s a shame they’ll never meet.",
+    "Why don’t skeletons fight each other? They don’t have the guts."
+  ];
+  const quotes = [
+    "You are stronger than you feel today.",
+    "Tiny steps still move mountains.",
+    "Storms make trees take deeper roots.",
+    "Healing is not linear. And that’s okay.",
+    "One breath at a time. One win at a time."
+  ];
+
+  function speak(text){
+    try{
+      const u = new SpeechSynthesisUtterance(text);
+      u.rate = 1; u.pitch = 1; u.lang = navigator.language || 'en-US';
+      speechSynthesis.cancel();
+      speechSynthesis.speak(u);
+    }catch(e){ /* ignore on unsupported */ }
+  }
+
+  function vibrate(ms){ try{ navigator.vibrate && navigator.vibrate(ms); }catch(_){} }
+
+  qs('#btnGreet').onclick = ()=>{
+    const line = `Hey ${friendName}! Puff here. ${ownerName} asked me to remind you that you’re loved, safe, and getting better every day.`;
+    hello.textContent = `Hey ${friendName} ✨`;
+    msg.textContent = line;
+    popConfetti(26);
+    speak(line);
+    vibrate([40,40,40]);
+  };
+
+  qs('#btnJoke').onclick = ()=>{
+    const j = jokes[Math.floor(Math.random()*jokes.length)];
+    hello.textContent = `Giggle time, ${friendName}!`;
+    msg.textContent = j;
+    petBoop();
+    speak(j);
+  };
+
+  qs('#btnQuote').onclick = ()=>{
+    const q = quotes[Math.floor(Math.random()*quotes.length)];
+    hello.textContent = `You’ve got this, ${friendName}!`;
+    msg.textContent = q;
+    glow();
+    speak(q);
+  };
+
+  // Breathing coach 4-7-8
+  const overlay = qs('#breathCoach');
+  const bubble = qs('#bubble');
+  let breatheTimer = null; let cycle = 0; 
+
+  qs('#btnBreathe').onclick = ()=>{
+    overlay.style.display = 'grid';
+    document.body.style.overflow = 'hidden';
+    cycle = 0; runBreath();
+  };
+
+  overlay.onclick = stopBreath; // tap anywhere to close
+
+  function runBreath(){
+    const steps = [
+      {label:'Inhale', sec:4},
+      {label:'Hold', sec:7},
+      {label:'Exhale', sec:8},
+    ];
+    let i=0;
+    const doStep=()=>{
+      const s=steps[i];
+      bubble.textContent = s.label;
+      speak(s.label);
+      clearTimeout(breatheTimer);
+      breatheTimer = setTimeout(()=>{
+        i = (i+1)%steps.length;
+        if(i===0){ cycle++; if(cycle>=3){ return stopBreath(); } }
+        doStep();
+      }, s.sec*1000);
+    };
+    doStep();
+  }
+  function stopBreath(){
+    overlay.style.display = 'none';
+    document.body.style.overflow = '';
+    clearTimeout(breatheTimer);
+  }
+
+  qs('#btnHug').onclick = ()=>{
+    const line = `${ownerName} sends you a giant bear hug! Squeeze your shoulders for 5 seconds… and release.`;
+    msg.textContent = line; speak(line); vibrate([60,60,120]);
+    hugAnim();
+  };
+
+  qs('#btnConfetti').onclick = ()=> popConfetti(80);
+  qs('#btnWater').onclick = ()=>{
+    const line = `Hydration check, ${friendName}! Take a sip of water now. Your body will thank you.`;
+    msg.textContent = line; speak(line);
+  };
+  qs('#btnRename').onclick = ()=> askNames();
+
+  function petBoop(){ petEl.animate([
+    { transform:'translateY(0)' },
+    { transform:'translateY(-6px) scale(1.02)' },
+    { transform:'translateY(0)'}
+  ],{ duration:350, easing:'ease-out'}); }
+
+  function hugAnim(){ petEl.animate([
+    { transform:'scale(1)' },
+    { transform:'scale(1.06)' },
+    { transform:'scale(1)'}
+  ],{ duration:600, easing:'ease-in-out'}); }
+
+  function glow(){ qs('#status').animate([
+    { boxShadow:'var(--glow)' },
+    { boxShadow:'0 0 60px rgba(0,230,167,.7), 0 0 12px rgba(0,230,167,.9)' },
+    { boxShadow:'var(--glow)' }
+  ],{ duration:1200}); }
+
+  // Confetti (tiny)
+  const canvas = qs('#fx'); const ctx = canvas.getContext('2d');
+  function size(){ canvas.width = innerWidth; canvas.height = innerHeight; }
+  size(); addEventListener('resize', size);
+  function popConfetti(n=40){
+    const bits = Array.from({length:n},()=>({
+      x: Math.random()*canvas.width,
+      y: -20,
+      r: Math.random()*6+4,
+      s: Math.random()*2+1,
+      a: 1,
+      vx: (Math.random()-.5)*1.5,
+      vy: Math.random()*2+1
+    }));
+    const id = setInterval(()=>{
+      ctx.clearRect(0,0,canvas.width,canvas.height);
+      bits.forEach(b=>{
+        b.x+=b.vx; b.y+=b.vy; b.a-=0.008; b.vy+=0.03;
+        ctx.globalAlpha = Math.max(b.a,0);
+        ctx.beginPath(); ctx.arc(b.x,b.y,b.r,0,Math.PI*2); ctx.fillStyle = ['#7c5cff','#00e6a7','#ff9ecf','#ffe38f'][Math.floor(Math.random()*4)]; ctx.fill();
+      });
+      if(bits.every(b=>b.a<=0)) { clearInterval(id); ctx.clearRect(0,0,canvas.width,canvas.height); }
+    }, 16);
+  }
+})();
+</script>
+</body>
+</html>
